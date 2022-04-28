@@ -9,6 +9,10 @@ export const UserSchema = new mongoose.Schema<User>({
   password: {
     type: String,
   },
+  words: {
+    type: Number,
+    default: 0,
+  },
 });
 
 UserSchema.pre<User>('save', function (next) {
