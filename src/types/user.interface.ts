@@ -4,4 +4,5 @@ export interface User extends Document {
   _id?: string;
   email: string;
   password: string;
+  words? : number
 }

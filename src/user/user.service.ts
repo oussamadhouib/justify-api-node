@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -6,12 +6,18 @@ import { User } from '../types/user.interface';
 import { LoginDTO } from '../auth/dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { Payload } from '../types/payload';
+import { Cron, Interval } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
+  private readonly logger = new Logger('User');
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.findOne(createUserDto.email).exec();
+    if (user) {
+      throw new HttpException('User exist', HttpStatus.NOT_FOUND);
+    }
     let createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
@@ -41,5 +47,19 @@ export class UserService {
     const sanitized = user.toObject();
     delete sanitized['password'];
     return sanitized;
+  }
+
+  @Cron('0 0 * * *')
+  async resetWords() {
+    await this.userModel.updateMany({}, { words: 0 });
+    this.logger.debug('Reset Words =====>  Called every day');
+  }
+
+  updateWords(user: User, newWords: number) {
+    return this.userModel.findOneAndUpdate(
+      { _id: user._id },
+      { words: newWords },
+      { new: true },
+    );
   }
 }
