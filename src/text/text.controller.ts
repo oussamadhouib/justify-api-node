@@ -10,7 +10,7 @@ import {
 import { TextService } from './text.service';
 import * as rawbody from 'raw-body';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { textExemple } from '../utils/contants';
 import { UserService } from '../user/user.service';
 
@@ -21,6 +21,7 @@ export class TextController {
     private readonly userService: UserService,
   ) {}
 
+  @ApiBearerAuth()
   @ApiConsumes('text/plain')
   @ApiBody({
     schema: {
