@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { User } from '../types/user.interface';
+import { User } from '../common/interfaces/user.interface';
 
 export const UserSchema = new mongoose.Schema<User>({
   email: {

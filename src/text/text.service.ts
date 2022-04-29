@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { ITextService } from '../common/interfaces/text.service.interface';
 
 @Injectable()
-export class TextService {
+export class TextService implements ITextService {
   justify(words: string[], L: number): string[] {
     let lines = [],
       index = 0;
