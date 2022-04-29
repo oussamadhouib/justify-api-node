@@ -5,7 +5,7 @@ import {
   USER_SERVICE_TOKEN,
 } from '../common/interfaces/user.service.interface';
 
-@Controller('users')
+@Controller('api/users')
 export class UserController {
   constructor(
     @Inject(USER_SERVICE_TOKEN)
